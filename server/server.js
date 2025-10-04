@@ -3,9 +3,10 @@ import cors from "cors";
 import { connectDb } from "./config/db.js";
 import "dotenv/config";
 import dotenv from "dotenv";
-import authRoutes from "./routes/authRoutes.js";
+import userRoutes  from "./routes/user-route.js";
 import blogRoutes from "./routes/blogRoutes.js";
 import chatRoutes from "./routes/chat-route.js";
+import accountRoutes from "./routes/account-route.js";
 import axios from "axios";
 import { Server } from "socket.io";
 import http from "http";
@@ -30,8 +31,9 @@ connectDb();
 
 // --- Routes ---
 app.use("/api/blogs", blogRoutes);
-app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
 app.use("/api/chat", chatRoutes);
+app.use("/api/sos", accountRoutes);
 
 // Root route
 app.get("/", (req, res) => {
