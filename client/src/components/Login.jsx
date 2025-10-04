@@ -2,67 +2,52 @@ import React, { useState } from "react";
 import { FaUser, FaLock, FaEnvelope } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import axios from "axios";
 
-const LoginRegister = () => {
+const LoginRegisterMotion = () => {
   const [isLoginActive, setIsLoginActive] = useState(true);
-  const [loginData, setLoginData] = useState({ username: "", password: "" });
-  const [registerData, setRegisterData] = useState({ username: "", email: "", password: "" });
-
+  const [loginData, setLoginData] = useState({ email: "", password: "" });
+  const [registerData, setRegisterData] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
+  const [message, setMessage] = useState("");
   const navigate = useNavigate();
-  const API_URL = "http://localhost:5000/api/users";
 
-  const toggleForm = () => setIsLoginActive(!isLoginActive);
+  const toggleForm = () => {
+    setIsLoginActive(!isLoginActive);
+    setMessage("");
+  };
 
+  // Handlers
   const handleLoginChange = (e) =>
-    setLoginData({ ...loginData, [e.target.id]: e.target.value });
+    setLoginData({ ...loginData, [e.target.name]: e.target.value });
+
   const handleRegisterChange = (e) =>
-    setRegisterData({ ...registerData, [e.target.id]: e.target.value });
+    setRegisterData({ ...registerData, [e.target.name]: e.target.value });
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch(`${API_URL}/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: loginData.username, password: loginData.password }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Login failed");
-
-      if (data.token) localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data));
-
-      toast.success("Login successful!");
+      const res = await axios.post("http://localhost:8000/api/auth/login", loginData);
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+      setMessage("✅ Login successful!");
       navigate("/"); // redirect to home
     } catch (err) {
-      toast.error(err.message);
+      setMessage(err.response?.data?.error || "Login failed");
     }
   };
 
   const handleRegisterSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch(`${API_URL}/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: registerData.username,
-          email: registerData.email,
-          password: registerData.password,
-        }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Registration failed");
-
-      if (data.token) localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data));
-
-      toast.success("Registration successful!");
-      navigate("/"); // redirect to home
+      await axios.post("http://localhost:8000/api/auth/register", registerData);
+      setMessage("✅ Registration successful! Please login.");
+      setIsLoginActive(true);
     } catch (err) {
-      toast.error(err.message);
+      setMessage(err.response?.data?.error || "Registration failed");
     }
   };
 
@@ -81,7 +66,6 @@ const LoginRegister = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-white/20 backdrop-blur-md p-4">
-      <ToastContainer position="top-center" />
       <div className="relative w-full max-w-4xl h-[550px] bg-white rounded-3xl shadow-2xl overflow-hidden">
         {/* Forms */}
         <AnimatePresence custom={isLoginActive ? 1 : -1} mode="wait">
@@ -101,11 +85,11 @@ const LoginRegister = () => {
 
               <div className="relative">
                 <input
-                  type="text"
-                  placeholder="Email"
-                  id="username"
-                  value={loginData.username}
+                  name="email"
+                  type="email"
+                  value={loginData.email}
                   onChange={handleLoginChange}
+                  placeholder="Email"
                   required
                   className="w-full px-4 py-3 bg-gray-100 rounded-lg outline-none focus:ring-2 focus:ring-purple-400"
                 />
@@ -114,11 +98,11 @@ const LoginRegister = () => {
 
               <div className="relative">
                 <input
+                  name="password"
                   type="password"
-                  placeholder="Password"
-                  id="password"
                   value={loginData.password}
                   onChange={handleLoginChange}
+                  placeholder="Password"
                   required
                   className="w-full px-4 py-3 bg-gray-100 rounded-lg outline-none focus:ring-2 focus:ring-purple-400"
                 />
@@ -128,6 +112,8 @@ const LoginRegister = () => {
               <button className="w-full py-3 bg-gradient-to-r from-purple-500 to-pink-400 text-white font-semibold rounded-lg hover:scale-[1.02] transition">
                 Login
               </button>
+
+              {message && <p className="text-center text-sm text-gray-600 font-medium">{message}</p>}
             </motion.form>
           ) : (
             <motion.form
@@ -145,11 +131,11 @@ const LoginRegister = () => {
 
               <div className="relative">
                 <input
+                  name="username"
                   type="text"
-                  placeholder="Username"
-                  id="username"
                   value={registerData.username}
                   onChange={handleRegisterChange}
+                  placeholder="Username"
                   required
                   className="w-full px-4 py-3 bg-gray-100 rounded-lg outline-none focus:ring-2 focus:ring-purple-400"
                 />
@@ -158,11 +144,11 @@ const LoginRegister = () => {
 
               <div className="relative">
                 <input
+                  name="email"
                   type="email"
-                  placeholder="Email"
-                  id="email"
                   value={registerData.email}
                   onChange={handleRegisterChange}
+                  placeholder="Email"
                   required
                   className="w-full px-4 py-3 bg-gray-100 rounded-lg outline-none focus:ring-2 focus:ring-purple-400"
                 />
@@ -171,11 +157,11 @@ const LoginRegister = () => {
 
               <div className="relative">
                 <input
+                  name="password"
                   type="password"
-                  placeholder="Password"
-                  id="password"
                   value={registerData.password}
                   onChange={handleRegisterChange}
+                  placeholder="Password"
                   required
                   className="w-full px-4 py-3 bg-gray-100 rounded-lg outline-none focus:ring-2 focus:ring-purple-400"
                 />
@@ -185,6 +171,8 @@ const LoginRegister = () => {
               <button className="w-full py-3 bg-gradient-to-r from-purple-500 to-pink-400 text-white font-semibold rounded-lg hover:scale-[1.02] transition">
                 Register
               </button>
+
+              {message && <p className="text-center text-sm text-gray-600 font-medium">{message}</p>}
             </motion.form>
           )}
         </AnimatePresence>
@@ -220,4 +208,4 @@ const LoginRegister = () => {
   );
 };
 
-export default LoginRegister;
+export default LoginRegisterMotion;
