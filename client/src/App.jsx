@@ -13,6 +13,7 @@ import Home from "./pages/Home";
 // import Account from "./pages/Account";
 // import Edit from "./pages/Edit";
  import Blog from "./pages/Blog";  
+import TravelComp from "./pages/TravelComp";
 
 
 function App() {
@@ -33,11 +34,13 @@ function App() {
         <Route path="/women-jobs" element={<WomenJobs />} /> */}
          <Route path="/create" element={<PostBlog />} />
          <Route path="/login" element={<Login />} /> 
+        
         <Route path="*" element={<h1 className='text-center mt-10 text-2xl font-semibold'>404 - Page Not Found</h1>} />
       </Route>
 
       {/* SOS full page (no layout) */}
       {/* <Route path="/sos" element={<SOS />} /> */}
+       <Route path="/travel" element={<TravelComp/>} />
     </Routes>
    
   );
