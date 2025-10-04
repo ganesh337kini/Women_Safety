@@ -5,7 +5,7 @@ import { AiFillDelete, AiOutlineClose } from "react-icons/ai";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const socket = io("http://localhost:5000");
+const socket = io("http://localhost:8000");
 
 const Chat = ({ setOpen, open }) => {
   const navigate = useNavigate();
@@ -21,7 +21,7 @@ const Chat = ({ setOpen, open }) => {
   const fetchMessages = async () => {
     if (!token) return;
     try {
-      const res = await axios.get("http://localhost:5000/api/chat/get", {
+      const res = await axios.get("http://localhost:8000/api/chat/get", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setMessages(res.data);
@@ -49,20 +49,31 @@ const Chat = ({ setOpen, open }) => {
     };
   }, [token]);
 
+  // 🧩 Send message
   const sendMessage = async (e) => {
     e.preventDefault();
     if (!message.trim() || !token) return;
 
+    // Debug log
+    console.log("Sending message:", {
+      text: message,
+      replyTo,
+      user: userId,
+      token,
+    });
+
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/chat/send",
+        "http://localhost:8000/api/chat/send",
         {
           text: message,
           replyTo,
-          user: userId, // 👈 yaha userId bhi bhejna hoga
+          user: userId,
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
+
+      console.log("Response from backend:", res.data); // ✅ see backend response
 
       socket.emit("chat message", res.data);
       setMessage("");
@@ -75,7 +86,7 @@ const Chat = ({ setOpen, open }) => {
   const deleteMessage = async (id) => {
     if (!id || !token) return;
     try {
-      await axios.delete(`http://localhost:5000/api/chat/delete/${id}`, {
+      await axios.delete(`http://localhost:8000/api/chat/delete/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       socket.emit("delete message", id);
@@ -89,7 +100,7 @@ const Chat = ({ setOpen, open }) => {
 
   return (
     <div className="flex flex-col h-full w-full bg-pink-50 rounded-lg overflow-hidden shadow-lg">
-      {/* Header with cross button */}
+      {/* Header */}
       <div className="flex justify-between items-center bg-pink-200 p-3 border-b border-pink-300">
         <h2 className="font-semibold text-gray-700">Chat</h2>
         <button
@@ -100,7 +111,6 @@ const Chat = ({ setOpen, open }) => {
         </button>
       </div>
 
-      {/* Main area */}
       {!token ? (
         <div className="flex flex-col items-center justify-center flex-1 p-6">
           <h2 className="text-gray-700 font-semibold text-lg mb-4">
@@ -153,7 +163,6 @@ const Chat = ({ setOpen, open }) => {
             ))}
           </div>
 
-          {/* Replying info */}
           {replyTo && (
             <div className="text-sm text-blue-600 p-2 border-t border-pink-300">
               Replying to:{" "}

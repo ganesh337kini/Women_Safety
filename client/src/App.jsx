@@ -14,6 +14,9 @@ import Home from "./pages/Home";
 // import Edit from "./pages/Edit";
  import Blog from "./pages/Blog";  
 import TravelComp from "./pages/TravelComp";
+import Profile from "./pages/Profile";
+import SpeedList from "./pages/SpeedList";
+import Create from "./pages/Create";
 
 
 function App() {
@@ -24,6 +27,9 @@ function App() {
       <Route element={<MainLayout />}>
         <Route path="/" element={<Home />} />
          <Route path="/blog" element={<Blog />} />
+         <Route path="/profile" element={<Profile/>} />
+       <Route path="/speedlist" element={<SpeedList/>} />
+       <Route path="/create" element={<Create/>} />
          
         {/* <Route path="/blog/:id" element={<BlogDetail />} />
         <Route path="/tutorials" element={<Tutorials />} />
