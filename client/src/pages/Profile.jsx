@@ -4,11 +4,11 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
-
 // Leaflet marker icons fix
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
+import { Link } from "react-router-dom";
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -20,6 +20,7 @@ L.Icon.Default.mergeOptions({
 const Profile = () => {
   const readUrl = "http://localhost:5000/api/sos/read";
   const updateUrl = "http://localhost:5000/api/sos/update";
+  const createUrl = "http://localhost:5000/api/sos/create";
 
   const user = JSON.parse(localStorage.getItem("user"));
   const token = user?.token;
@@ -41,14 +42,15 @@ const Profile = () => {
   const [editingLocation, setEditingLocation] = useState(false);
   const [newLocation, setNewLocation] = useState({ lat: "", lng: "" });
 
+  // Fetch profile
   useEffect(() => {
     const fetchProfile = async () => {
       if (!token) return;
       try {
         const res = await axios.get(readUrl, { headers: { Authorization: `Bearer ${token}` } });
         setProfile(res.data);
-        setNewPhone(res.data.account.phone || "");
-        setNewLocation(res.data.account.location || { lat: "", lng: "" });
+        setNewPhone(res.data?.account?.phone || "");
+        setNewLocation(res.data?.account?.location || { lat: "", lng: "" });
       } catch (err) {
         console.error(err);
       } finally {
@@ -57,6 +59,23 @@ const Profile = () => {
     };
     fetchProfile();
   }, [token]);
+
+  // Create Profile
+  const handleCreateProfile = async () => {
+    try {
+      const defaultData = {
+        phone: user?.phone || "",
+        relatives: [{ name: "Relative 1", phone: "9999999999" }],
+        location: { lat: 0, lng: 0 },
+      };
+      const res = await axios.post(createUrl, defaultData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setProfile(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   // ----- Relatives Handlers -----
   const handleEditRelative = (index) => {
@@ -142,7 +161,21 @@ const Profile = () => {
   };
 
   if (loading) return <div className="min-h-screen flex items-center justify-center bg-pink-100">Loading...</div>;
-  if (!profile) return <div className="min-h-screen flex items-center justify-center bg-pink-100">Profile not found!</div>;
+
+  // Agar profile hi nahi bani → "Create Profile" button
+  if (!profile?.account) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-pink-100">
+        <h2 className="text-xl font-bold text-pink-600 mb-4">No SOS Profile Found</h2>
+        <Link to="/create"
+          onClick={handleCreateProfile}
+          className="bg-pink-500 hover:bg-pink-600 text-white px-6 py-3 rounded-lg shadow-lg"
+        >
+          Create Profile
+        </Link>
+      </div>
+    );
+  }
 
   const { phone, relatives, location } = profile.account || {};
 
@@ -178,10 +211,7 @@ const Profile = () => {
           </div>
           <div>
             {editingPhone ? (
-              <button
-                onClick={handleSavePhone}
-                className="bg-pink-500 hover:bg-pink-600 text-white px-3 py-1 rounded"
-              >
+              <button onClick={handleSavePhone} className="bg-pink-500 hover:bg-pink-600 text-white px-3 py-1 rounded">
                 Save
               </button>
             ) : (
@@ -196,14 +226,11 @@ const Profile = () => {
           </div>
         </div>
 
-        {/* Relatives Section */}
+        {/* Relatives */}
         <div className="p-4 bg-pink-50 rounded-lg shadow-inner">
           <h3 className="font-semibold text-pink-600 mb-2">👨‍👩‍👧‍👦 Emergency Relatives</h3>
           {relatives.map((rel, i) => (
-            <div
-              key={i}
-              className={`flex gap-4 mb-2 p-2 rounded-lg bg-pink-100 ${editingIndex === i ? "" : "cursor-default"}`}
-            >
+            <div key={i} className="flex gap-4 mb-2 p-2 rounded-lg bg-pink-100">
               <div className="flex-1 bg-pink-200 p-2 rounded-lg">
                 <p className="text-gray-700 font-medium">Name</p>
                 {editingIndex === i ? (
@@ -306,78 +333,77 @@ const Profile = () => {
           )}
         </div>
 
-        {/* Location Map */}
-        {/* Location Map */}
-{location && (
-  <div className="p-4 bg-pink-50 rounded-lg shadow-inner">
-    <div className="flex items-center justify-between mb-2">
-      <h3 className="font-semibold text-pink-600">📍 Location</h3>
-      {editingLocation ? (
-        <button
-          onClick={handleSaveLocation}
-          className="bg-pink-500 hover:bg-pink-600 text-white px-3 py-1 rounded"
-        >
-          Save
-        </button>
-      ) : (
-        <button
-          onClick={() => setEditingLocation(true)}
-          className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded"
-          title="Edit Location"
-        >
-          <FaEdit />
-        </button>
-      )}
-    </div>
+        {/* Location */}
+        {location && (
+          <div className="p-4 bg-pink-50 rounded-lg shadow-inner">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="font-semibold text-pink-600">📍 Location</h3>
+              {editingLocation ? (
+                <button
+                  onClick={handleSaveLocation}
+                  className="bg-pink-500 hover:bg-pink-600 text-white px-3 py-1 rounded"
+                >
+                  Save
+                </button>
+              ) : (
+                <button
+                  onClick={() => setEditingLocation(true)}
+                  className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded"
+                  title="Edit Location"
+                >
+                  <FaEdit />
+                </button>
+              )}
+            </div>
 
-    {editingLocation && (
-      <div className="flex gap-2 mb-2">
-        <button
-          onClick={() => {
-            if (navigator.geolocation) {
-              navigator.geolocation.getCurrentPosition(
-                (pos) => setNewLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
-                (err) => alert("Unable to fetch location")
-              );
-            } else {
-              alert("Geolocation not supported");
-            }
-          }}
-          className="bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded"
-        >
-          📍 Use Current Location
-        </button>
-      </div>
-    )}
+            {editingLocation && (
+              <div className="flex gap-2 mb-2">
+                <button
+                  onClick={() => {
+                    if (navigator.geolocation) {
+                      navigator.geolocation.getCurrentPosition(
+                        (pos) => setNewLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+                        () => alert("Unable to fetch location")
+                      );
+                    } else {
+                      alert("Geolocation not supported");
+                    }
+                  }}
+                  className="bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded"
+                >
+                  📍 Use Current Location
+                </button>
+              </div>
+            )}
 
-    <div className="grid grid-cols-2 gap-2 mb-2">
-      <div className="bg-pink-200 p-2 rounded-lg">
-        <p className="text-gray-700 font-medium">Latitude</p>
-        <p className="text-gray-700">{newLocation.lat || location.lat}</p>
-      </div>
-      <div className="bg-pink-200 p-2 rounded-lg">
-        <p className="text-gray-700 font-medium">Longitude</p>
-        <p className="text-gray-700">{newLocation.lng || location.lng}</p>
-      </div>
-    </div>
+            <div className="grid grid-cols-2 gap-2 mb-2">
+              <div className="bg-pink-200 p-2 rounded-lg">
+                <p className="text-gray-700 font-medium">Latitude</p>
+                <p className="text-gray-700">{newLocation.lat || location.lat}</p>
+              </div>
+              <div className="bg-pink-200 p-2 rounded-lg">
+                <p className="text-gray-700 font-medium">Longitude</p>
+                <p className="text-gray-700">{newLocation.lng || location.lng}</p>
+              </div>
+            </div>
 
-    <MapContainer
-      center={[newLocation.lat || location.lat, newLocation.lng || location.lng]}
-      zoom={13}
-      scrollWheelZoom={false}
-      className="w-full h-64 rounded-lg"
-    >
-      <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a>'
-      />
-      <Marker position={[newLocation.lat || location.lat, newLocation.lng || location.lng]}>
-        <Popup>Your Current Location</Popup>
-      </Marker>
-    </MapContainer>
-  </div>
-)}
-        </div>
+            <MapContainer
+              center={[newLocation.lat || location.lat, newLocation.lng || location.lng]}
+              zoom={13}
+              scrollWheelZoom={false}
+              className="w-full h-64 rounded-lg"
+            >
+              <TileLayer
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a>'
+              />
+              <Marker position={[newLocation.lat || location.lat, newLocation.lng || location.lng]}>
+                <Popup>Your Current Location</Popup>
+              </Marker>
+            </MapContainer>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
