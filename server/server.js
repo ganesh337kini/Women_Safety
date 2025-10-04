@@ -3,20 +3,24 @@ import cors from "cors";
 import { connectDb } from "./config/db.js";
 import "dotenv/config";
 import dotenv from "dotenv";
-import authRoutes from "./routes/user-route.js";
+import authRoutes from "./routes/authRoutes.js";
 import axios from "axios";
-// import blogRoutes from "./routes/blogRoutes.js";
+import blogRoutes from "./routes/blogRoutes.js";
 import chatRoutes from "./routes/chat-route.js";
 import { Server } from "socket.io";
 import http from "http";
+import path from "path";
 
 // import accoutRoute from "./routes/account-route.js";
 
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 5000;
-const API_KEY = process.env.YOUTUBE_API_KEY;
+const port = process.env.PORT || 8000;
+// const API_KEY = process.env.YOUTUBE_API_KEY;
+
+// Serve assets folder
+app.use("/asset", express.static(path.join(path.resolve(), "asset")));
 
 // --- Middleware ---
 app.use(express.json());
@@ -27,10 +31,10 @@ connectDb();
 
 // --- Routes ---
 // User-related routes
-// app.use("/api/blogs", blogRoutes);
+app.use("/api/blogs", blogRoutes);
 // app.use("/api/sos", accoutRoute);
-app.use("/api/users", authRoutes); 
-app.use("/api/chat", chatRoutes); 
+app.use("/api/auth", authRoutes);
+app.use("/api/chat", chatRoutes);
 
 // Root route
 app.get("/", (req, res) => {
@@ -125,7 +129,7 @@ io.on("connection", (socket) => {
     */
 
     const messageWithId = {
-      id: generateId(),          // unique id for this message
+      id: generateId(), // unique id for this message
       text: msg.text,
       replyTo: msg.replyTo || null,
       user: msg.user || "User",
