@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+/* Your custom classes */
+.gradient-bg {
+  background: linear-gradient(135deg, #a855f7 0%, #fb7185 50%, #ec4899 100%);
+}
+
+.light-gradient {
+  background: linear-gradient(135deg, #a855f7 0%, #fdf2f8 100%);
+}
+
+.carousel-slide {
+  transition: transform 0.5s ease-in-out;
+}
+
+.stat-card {
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.1);
+}
