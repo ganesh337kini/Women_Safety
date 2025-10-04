@@ -1,6 +1,9 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import API from "../services/api.js";
 
-const BlogForm = () => {
+const BlogForm = ({ onNewBlog }) => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -9,9 +12,10 @@ const BlogForm = () => {
     tags: "",
     image: null,
   });
-
   const [imagePreview, setImagePreview] = useState(null);
   const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [showPreview, setShowPreview] = useState(false);
 
   const handleChange = (e) => {
@@ -31,25 +35,53 @@ const BlogForm = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSuccess(true);
-    setShowPreview(true);
+    setLoading(true);
+    setError("");
 
-    // Reset form after 5 seconds
-    setTimeout(() => {
-      setFormData({
-        title: "",
-        description: "",
-        author: "",
-        category: "",
-        tags: "",
-        image: null,
+    try {
+      const data = new FormData();
+      data.append("title", formData.title);
+      data.append("description", formData.description);
+      data.append("author", formData.author);
+      data.append("category", formData.category);
+      data.append("tags", formData.tags);
+      if (formData.image) data.append("image", formData.image);
+
+      const res = await API.post("/blogs", data, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
-      setImagePreview(null);
-      setSuccess(false);
-      setShowPreview(false);
-    }, 5000);
+
+      setSuccess(true);
+      setShowPreview(true);
+
+      // Update parent state dynamically
+      if (onNewBlog) onNewBlog(res.data);
+
+      // Navigate to blog section
+      navigate("/blog");
+
+      // Reset form after 5 seconds
+      setTimeout(() => {
+        setFormData({
+          title: "",
+          description: "",
+          author: "",
+          category: "",
+          tags: "",
+          image: null,
+        });
+        setImagePreview(null);
+        setSuccess(false);
+        setShowPreview(false);
+      }, 5000);
+    } catch (err) {
+      console.error(err);
+      setError(err.response?.data?.error || "Failed to post blog.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const { title, description, author, category, tags } = formData;
@@ -75,140 +107,99 @@ const BlogForm = () => {
 
         {success && (
           <div className="success-message bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg animate-slideIn">
-            <strong>Success!</strong> Your blog post has been created
-            successfully!
+            <strong>Success!</strong> Your blog post has been created successfully!
+          </div>
+        )}
+        {error && <p className="text-red-500">{error}</p>}
+
+        <input
+          name="title"
+          value={title}
+          onChange={handleChange}
+          placeholder="Blog Title"
+          required
+          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:outline-none transition-all duration-300"
+        />
+
+        <textarea
+          name="description"
+          value={description}
+          onChange={handleChange}
+          placeholder="Write your blog content..."
+          rows="5"
+          className="w-full p-3 rounded-lg bg-gray-50 border border-gray-300 focus:ring-2 focus:ring-purple-400 focus:outline-none transition-all duration-300 resize-none"
+          required
+        />
+        <div
+          className={`text-xs mt-1 text-right ${
+            description.length > 500 ? "text-red-500" : "text-gray-500"
+          }`}
+        >
+          {description.length} characters
+        </div>
+
+        <input
+          type="text"
+          name="author"
+          value={author}
+          onChange={handleChange}
+          placeholder="Author (Optional)"
+          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:outline-none transition-all duration-300"
+        />
+
+        <select
+          name="category"
+          value={category}
+          onChange={handleChange}
+          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:outline-none transition-all duration-300"
+          required
+        >
+          <option value="">Select Category</option>
+          <option value="Legal Rights">Legal Rights</option>
+          <option value="My Experience">My Experience</option>
+          <option value="Safety Tips">Safety Tips</option>
+          <option value="Health">Health</option>
+          <option value="Others">Others</option>
+        </select>
+
+        <input
+          type="text"
+          name="tags"
+          value={tags}
+          onChange={handleChange}
+          placeholder="Comma separated tags"
+          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:outline-none transition-all duration-300"
+        />
+
+        <input
+          type="file"
+          name="image"
+          accept="image/*"
+          onChange={handleChange}
+          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:outline-none transition-all duration-300"
+        />
+        {imagePreview && (
+          <div className="mt-3">
+            <img
+              src={imagePreview}
+              alt="Preview"
+              className="w-full h-48 object-cover rounded-lg border border-gray-200"
+            />
           </div>
         )}
 
-        {/* Title */}
-        <div className="form-field">
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
-            Blog Title
-          </label>
-          <input
-            type="text"
-            name="title"
-            value={title}
-            onChange={handleChange}
-            placeholder="Enter blog title"
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:outline-none transition-all duration-300"
-            required
-          />
-        </div>
-
-        {/* Description */}
-        <div className="form-field">
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
-            Description
-          </label>
-          <textarea
-            name="description"
-            value={description}
-            onChange={handleChange}
-            placeholder="Write your blog content..."
-            rows="5"
-            className="w-full p-3 rounded-lg bg-gray-50 border border-gray-300 focus:ring-2 focus:ring-purple-400 focus:outline-none transition-all duration-300 resize-none"
-            required
-          ></textarea>
-          <div
-            className={`text-xs mt-1 text-right ${
-              description.length > 500 ? "text-red-500" : "text-gray-500"
-            }`}
-          >
-            {description.length} characters
-          </div>
-        </div>
-
-        {/* Author */}
-        <div className="form-field">
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
-            Author (Optional)
-          </label>
-          <input
-            type="text"
-            name="author"
-            value={author}
-            onChange={handleChange}
-            placeholder="Your Name"
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:outline-none transition-all duration-300"
-          />
-        </div>
-
-        {/* Category */}
-        <div className="form-field">
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
-            Category
-          </label>
-          <select
-            name="category"
-            value={category}
-            onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:outline-none transition-all duration-300"
-            required
-          >
-            <option value="">Select Category</option>
-            <option value="Legal Rights">Legal Rights</option>
-            <option value="My Experience">My Experience</option>
-            <option value="Safety Tips">Safety Tips</option>
-            <option value="Health">Health</option>
-            <option value="Others">Others</option>
-          </select>
-        </div>
-
-        {/* Tags */}
-        <div className="form-field">
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
-            Tags
-          </label>
-          <input
-            type="text"
-            name="tags"
-            value={tags}
-            onChange={handleChange}
-            placeholder="Comma separated tags (e.g., health, tips, lifestyle)"
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:outline-none transition-all duration-300"
-          />
-        </div>
-
-        {/* Image Upload */}
-        <div className="form-field">
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
-            Featured Image (Optional)
-          </label>
-          <div className="relative">
-            <input
-              type="file"
-              name="image"
-              accept="image/*"
-              onChange={handleChange}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100 transition-all duration-300"
-            />
-          </div>
-          {imagePreview && (
-            <div className="mt-3">
-              <img
-                src={imagePreview}
-                alt="Preview"
-                className="w-full h-48 object-cover rounded-lg border border-gray-200"
-              />
-            </div>
-          )}
-        </div>
-
-        {/* Submit Button */}
         <button
           type="submit"
-          className="submit-btn w-full bg-gradient-to-r from-purple-600 to-pink-500 text-white font-bold py-3 px-6 rounded-lg hover:from-purple-700 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2 transition-all duration-300"
+          disabled={loading}
+          className="w-full bg-gradient-to-r from-purple-600 to-pink-500 text-white font-bold py-3 px-6 rounded-lg hover:from-purple-700 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2 transition-all duration-300"
         >
-          📝 Publish Blog Post
+          {loading ? "Posting..." : "Publish Blog"}
         </button>
 
         {/* Blog Preview */}
         {showPreview && (
           <div className="mt-8 p-6 bg-gray-50 rounded-lg border border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">
-              📖 Blog Preview
-            </h3>
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">📖 Blog Preview</h3>
             <div className="border-l-4 border-purple-500 pl-4">
               <h4 className="text-xl font-bold text-gray-800 mb-2">{title}</h4>
               <div className="flex items-center text-sm text-gray-600 mb-3">
@@ -227,16 +218,11 @@ const BlogForm = () => {
                   />
                 </div>
               )}
-              <p className="text-gray-700 leading-relaxed mb-3">
-                {description}
-              </p>
+              <p className="text-gray-700 leading-relaxed mb-3">{description}</p>
               {tagList.length > 0 && (
                 <div className="flex flex-wrap gap-2">
                   {tagList.map((tag, idx) => (
-                    <span
-                      key={idx}
-                      className="bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-xs"
-                    >
+                    <span key={idx} className="bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-xs">
                       #{tag}
                     </span>
                   ))}
