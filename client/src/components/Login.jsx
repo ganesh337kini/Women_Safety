@@ -3,12 +3,16 @@ import { FaUser, FaLock, FaEnvelope } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 
 const LoginRegister = () => {
   const [isLoginActive, setIsLoginActive] = useState(true);
   const [loginData, setLoginData] = useState({ username: "", password: "" });
-  const [registerData, setRegisterData] = useState({ username: "", email: "", password: "" });
+  const [registerData, setRegisterData] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
 
   const navigate = useNavigate();
   const API_URL = "http://localhost:5000/api/users";
@@ -26,7 +30,10 @@ const LoginRegister = () => {
       const res = await fetch(`${API_URL}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: loginData.username, password: loginData.password }),
+        body: JSON.stringify({
+          email: loginData.username,
+          password: loginData.password,
+        }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Login failed");
@@ -35,7 +42,8 @@ const LoginRegister = () => {
       localStorage.setItem("user", JSON.stringify(data));
 
       toast.success("Login successful!");
-      navigate("/"); // redirect to home
+      navigate("/");
+      window.location.reload();
     } catch (err) {
       toast.error(err.message);
     }
@@ -60,7 +68,8 @@ const LoginRegister = () => {
       localStorage.setItem("user", JSON.stringify(data));
 
       toast.success("Registration successful!");
-      navigate("/"); // redirect to home
+      navigate("/");
+      window.location.reload();
     } catch (err) {
       toast.error(err.message);
     }

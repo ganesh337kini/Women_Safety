@@ -10,7 +10,7 @@ import chatRoutes from "./routes/chat-route.js";
 import { Server } from "socket.io";
 import http from "http";
 
-// import accoutRoute from "./routes/account-route.js";
+import accoutRoute from "./routes/account-route.js";
 
 dotenv.config();
 
@@ -28,7 +28,7 @@ connectDb();
 // --- Routes ---
 // User-related routes
 // app.use("/api/blogs", blogRoutes);
-// app.use("/api/sos", accoutRoute);
+app.use("/api/sos", accoutRoute);
 app.use("/api/users", authRoutes); 
 app.use("/api/chat", chatRoutes); 
 

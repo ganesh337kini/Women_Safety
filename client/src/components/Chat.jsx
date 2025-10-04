@@ -59,7 +59,7 @@ const Chat = ({ setOpen, open }) => {
         {
           text: message,
           replyTo,
-          user: userId, // 👈 yaha userId bhi bhejna hoga
+          user: userId,
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );

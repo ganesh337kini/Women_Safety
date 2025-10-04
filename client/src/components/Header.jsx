@@ -7,7 +7,6 @@ const Header = () => {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
 
-  // Update state if localStorage changes (optional for live updates)
   useEffect(() => {
     const handleStorageChange = () => {
       setToken(localStorage.getItem("token"));
@@ -24,6 +23,9 @@ const Header = () => {
     setUser(null);
     navigate("/login");
   };
+
+  // get first letter of name
+  const firstLetter = user?.name ? user.name.charAt(0).toUpperCase() : "";
 
   return (
     <header className="gradient-bg shadow-lg sticky top-0 z-50 backdrop-blur-md">
@@ -51,16 +53,26 @@ const Header = () => {
           </Link>
         </nav>
 
-        {/* Login / Logout */}
+        {/* Login / Logout + Profile */}
         <div className="flex items-center space-x-4">
           {token ? (
-            <button
-              onClick={handleLogout}
-              className="flex items-center space-x-1 bg-white text-purple-600 hover:bg-purple-600 hover:text-white px-4 py-2 rounded-full font-medium transition"
-            >
-              <span>Logout</span>
-              <FaSignOutAlt className="w-5 h-5" />
-            </button>
+            <>
+              {/* Profile circle */}
+              <Link to="/profile">
+              <div className="w-10 h-10 cursor-pointer rounded-full bg-white flex items-center justify-center text-pink-400 font-bold">
+                {firstLetter}
+              </div>
+              </Link>
+
+              {/* Logout button */}
+              <button
+                onClick={handleLogout}
+                className="flex items-center space-x-1 bg-white text-purple-600 hover:bg-purple-600 hover:text-white px-4 py-2 rounded-full font-medium transition"
+              >
+                <span>Logout</span>
+                <FaSignOutAlt className="w-5 h-5" />
+              </button>
+            </>
           ) : (
             <Link
               to="/login"

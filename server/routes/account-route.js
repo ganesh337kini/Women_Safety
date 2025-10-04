@@ -1,21 +1,16 @@
-import jwt from "jsonwebtoken";
-import User from "../schema/user-schema.js";
 
-export const protect = async (req, res, next) => {
-  let token;
-  try {
-    if (
-      req.headers.authorization &&
-      req.headers.authorization.startsWith("Bearer")
-    ) {
-      token = req.headers.authorization.split(" ")[1];
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      req.user = await User.findById(decoded.id);
+// routes/accountRoutes.js
+import express from 'express';
+import { protect } from '../middleware/auth-middleware.js';
+import {
+  createAccount, updateAccount, deleteAccount, getAccount
+} from '../controller/account-controller.js';
 
-      return next();
-    }
-    res.status(401).json({ message: "Not authorized, no token" });
-  } catch (err) {
-    res.status(401).json({ message: "Not authorized, token failed" });
-  }
-};
+const router = express.Router();
+
+router.get("/read", protect, getAccount)
+router.post('/create', protect, createAccount);    // create account (user must be logged in)
+router.put('/update', protect, updateAccount);     // update
+router.delete('/delete', protect, deleteAccount);  // delete
+
+export default router;
