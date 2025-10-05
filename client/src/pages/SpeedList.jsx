@@ -65,7 +65,7 @@ const SpeedList = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-100 via-pink-200 to-pink-300 p-6">
       {/* Header */}
-      <header className="bg-pink-500 shadow-lg py-6 mb-8">
+      <header className="bg-gradient-to-br from-purple-800 via-pink-300 to-purple-500 shadow-lg py-6 mb-8">
         <div className="container mx-auto flex items-center justify-center space-x-4 animate-bounce">
           <FaFemale className="w-16 h-16 text-white" />
           <h1 className="text-4xl font-bold text-white">🚨 Women's Safety Speed List</h1>

@@ -1,16 +1,17 @@
 import express from "express";
 import cors from "cors";
 import { connectDb } from "./config/db.js";
-import "dotenv/config";
 import dotenv from "dotenv";
 import userRoutes  from "./routes/user-route.js";
 import blogRoutes from "./routes/blogRoutes.js";
 import chatRoutes from "./routes/chat-route.js";
 import accountRoutes from "./routes/account-route.js";
+import videoRoutes from "./routes/videoRoutes.js";
 import axios from "axios";
 import { Server } from "socket.io";
 import http from "http";
 import path from "path";
+import { fileURLToPath } from "url";
 
 dotenv.config();
 
@@ -19,12 +20,16 @@ const port = process.env.PORT || 8000;
 const OPENWEATHER_API_KEY = process.env.OPENWEATHER_API_KEY;
 const GEOAPIFY_API_KEY = process.env.GEOAPIFY_API_KEY;
 
-// Serve assets folder
-app.use("/asset", express.static(path.join(path.resolve(), "asset")));
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Middleware
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
+
+// Serve assets folder (if present)
+app.use("/asset", express.static(path.join(path.resolve(), "asset")));
 
 // Database
 connectDb();
@@ -34,6 +39,7 @@ app.use("/api/blogs", blogRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/sos", accountRoutes);
+app.use("/api/videos", videoRoutes);
 
 // Root route
 app.get("/", (req, res) => {
@@ -138,44 +144,6 @@ app.get("/api/weather", async (req, res) => {
   }
 });
 
-// --- YouTube Video API ---
-app.get("/api/videos", async (req, res) => {
-  try {
-    const query = req.query.q || "Women Safety Self Defense";
-    const filter = req.query.filter || "relevance";
-    const API_KEY = process.env.YOUTUBE_API_KEY;
-    let orderParam = "relevance";
-    if (filter === "Newest") orderParam = "date";
-    if (filter === "Most Viewed") orderParam = "viewCount";
-
-    const searchResp = await axios.get(
-      "https://www.googleapis.com/youtube/v3/search",
-      { params: { part: "snippet", q: query, type: "video", order: orderParam, maxResults: 10, key: API_KEY } }
-    );
-
-    const videoItems = searchResp.data.items || [];
-    const videoIds = videoItems.map((item) => item.id.videoId).join(",");
-    const statsResp = await axios.get(
-      "https://www.googleapis.com/youtube/v3/videos",
-      { params: { part: "statistics,contentDetails", id: videoIds, key: API_KEY } }
-    );
-
-    const statsItems = statsResp.data.items || [];
-    const videos = videoItems.map((item, idx) => ({
-      id: item.id.videoId,
-      title: item.snippet.title,
-      description: item.snippet.description,
-      thumbnails: item.snippet.thumbnails,
-      statistics: statsItems[idx]?.statistics || {},
-    }));
-
-    res.json(videos);
-  } catch (err) {
-    console.error("YouTube API error:", err.message);
-    res.status(500).json({ error: "Failed to fetch videos" });
-  }
-});
-
 // --- HTTP Server + Socket.io ---
 const server = http.createServer(app);
 const io = new Server(server, { cors: { origin: "*", methods: ["GET", "POST"] } });
@@ -188,7 +156,12 @@ io.on("connection", (socket) => {
   socket.emit("chat message", messages);
 
   socket.on("chat message", (msg) => {
-    const messageWithId = { id: Math.random().toString(36).substr(2, 9), text: msg.text, replyTo: msg.replyTo || null, user: msg.user || "User" };
+    const messageWithId = {
+      id: Math.random().toString(36).substr(2, 9),
+      text: msg.text,
+      replyTo: msg.replyTo || null,
+      user: msg.user || "User",
+    };
     messages.push(messageWithId);
     io.emit("chat message", messageWithId);
   });

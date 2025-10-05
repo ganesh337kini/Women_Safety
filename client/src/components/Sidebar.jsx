@@ -63,7 +63,7 @@ function Sidebar({
         boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
       }}
     >
-      <h2 style={{ color: '#6b21a8', marginBottom: 20 }}>Travel Companion</h2>
+      <h2 style={{ color: '#6b21a8', marginBottom: 20,fontWeight: 'bold' }}>Travel Companion</h2>
 
       {/* Karnataka Places Dropdown */}
       <div style={{ marginBottom: 20, fontWeight: 'bold' }}>
