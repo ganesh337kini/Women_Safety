@@ -18,6 +18,7 @@ import Profile from "./pages/Profile";
 import SpeedList from "./pages/SpeedList";
 import Create from "./pages/Create";
 
+import Tutorial from "./pages/Tutorial";
 
 function App() {
   return (
@@ -32,14 +33,16 @@ function App() {
        <Route path="/create" element={<Create/>} />
          
         {/* <Route path="/blog/:id" element={<BlogDetail />} />
-        <Route path="/tutorials" element={<Tutorials />} />
+         />
         <Route path="/emergency" element={<Emergency />} />
         <Route path="/account" element={<Account />} />
         <Route path="/edit" element={<Edit />} />
        
         <Route path="/women-jobs" element={<WomenJobs />} /> */}
+        
          <Route path="/create" element={<PostBlog />} />
          <Route path="/login" element={<Login />} /> 
+         <Route path="/tutorials" element={<Tutorial />} /> 
         
         <Route path="*" element={<h1 className='text-center mt-10 text-2xl font-semibold'>404 - Page Not Found</h1>} />
       </Route>
