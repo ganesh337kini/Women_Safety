@@ -1,20 +1,18 @@
 <!-- PROJECT HEADER -->
 <div align="center">
 
-# 💖 Women Safety & Awareness Platform
+# 💖 Women Safety & Awareness Platform  
 
 ### _Empowering Women through Technology, Awareness, and Action._
 
-![React](https://img.shields.io/badge/Frontend-React-61DBFB?logo=react)
-![Node.js](https://img.shields.io/badge/Backend-Node.js-68A063?logo=node.js)
-![MongoDB](https://img.shields.io/badge/Database-MongoDB-4EA94B?logo=mongodb)
-![Express](https://img.shields.io/badge/API-Express-lightgrey?logo=express)
-![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
-![Status](https://img.shields.io/badge/Status-Active-success)
+[![Website](https://img.shields.io/website?url=https%3A%2F%2Fwomen-safety-zowe.vercel.app&style=flat-square&color=brightgreen)](https://women-safety-zowe.vercel.app)
+![Status](https://img.shields.io/badge/Status-Active-success?style=flat-square)
 
 <p align="center">
   <b>A complete safety and empowerment ecosystem for women — combining education, awareness, and real-time assistance.</b>
 </p>
+
+🔗 **Live Website:** [https://women-safety-zowe.vercel.app](https://women-safety-zowe.vercel.app)
 
 </div>
 
@@ -22,37 +20,44 @@
 
 ## 🪷 About the Project
 
-The **Women Safety Platform** is an initiative to promote **security, awareness, and empowerment** among women.  
-It allows users to create a **personal SOS profile**, share their **live location**, explore **verified safety organizations**, and access **emergency helplines** with one click.
+The **Women Safety & Awareness Platform** is an initiative to promote **security, awareness, and empowerment** among women.  
+It enables users to create a **personal SOS profile**, share their **live location**, access **emergency helplines**, and explore **safety resources** from verified organizations.
 
-💡 _Built with a mission to blend technology with compassion and safety._
+💡 _Our mission is to blend technology with compassion and real-world safety._
 
 ---
 
 ## 🌟 Features Overview
 
-| 🌈 Category | 💡 Description |
-|-------------|----------------|
-| 🚨 **SOS Profile Management** | Register phone, relatives (up to 5), and real-time location. |
-| 🗺️ **Live Map Integration** | View and manage saved locations via Leaflet maps. |
-| 📞 **Emergency Speed List** | Quick-dial verified helplines (Women’s, Police, Ambulance, etc.). |
-| 📰 **Awareness Blogs** | Curated content promoting education, equality, and self-defense. |
-| 💪 **Safety Organizations** | Connect with national NGOs and women-support networks. |
-| ⚙️ **Editable Profile Dashboard** | Update contact info and relatives in one place. |
-| 💫 **Modern UI** | Animated, responsive design using Tailwind CSS and Framer Motion. |
+| Category | Description |
+|-----------|--------------|
+| 🚨 **SOS Profile Management** | Register your phone, add up to 5 relatives, and share live location. |
+| 🗺️ **Live Map Integration** | Real-time map visualization using Leaflet and OpenStreetMap. |
+| 📞 **Emergency Speed Dial** | Quick access to verified helplines (Police, Ambulance, Women’s). |
+| 📰 **Awareness Blogs** | Curated educational and safety-focused articles. |
+| 💪 **Safety Organizations** | Connect with NGOs and verified women-support networks. |
+| ⚙️ **Editable Profile Dashboard** | Update user data and emergency contacts easily. |
+| 💫 **Modern UI/UX** | Built with Tailwind CSS, Bootstrap, and Framer Motion for responsive design and smooth animations. |
 
 ---
 
 ## 🧠 Tech Stack
 
-| Layer | Technologies |
-|-------|---------------|
-| **Frontend** | React, Tailwind CSS, React Router, Framer Motion, React-Leaflet, React-Icons,Bootstrap-5
-|
-| **Backend** | Node.js, Express.js, MongoDB, Mongoose |
-| **Auth** | JSON Web Tokens (JWT) |
-| **Map** | Leaflet + OpenStreetMap |
-| **Version Control** | Git & GitHub |
+<div align="center">
+
+![React](https://img.shields.io/badge/Frontend-React-61DAFB?logo=react&style=for-the-badge)
+![TailwindCSS](https://img.shields.io/badge/UI-TailwindCSS-38B2AC?logo=tailwindcss&style=for-the-badge)
+![Bootstrap](https://img.shields.io/badge/UI-Bootstrap-7952B3?logo=bootstrap&style=for-the-badge)
+![Node.js](https://img.shields.io/badge/Backend-Node.js-68A063?logo=node.js&style=for-the-badge)
+![Express](https://img.shields.io/badge/API-Express-000000?logo=express&style=for-the-badge)
+![MongoDB](https://img.shields.io/badge/Database-MongoDB-4EA94B?logo=mongodb&style=for-the-badge)
+![JWT](https://img.shields.io/badge/Auth-JWT-orange?logo=jsonwebtokens&style=for-the-badge)
+![Leaflet](https://img.shields.io/badge/Map-Leaflet-199900?logo=leaflet&style=for-the-badge)
+![Framer Motion](https://img.shields.io/badge/Animation-Framer--Motion-0055FF?logo=framer&style=for-the-badge)
+![GitHub](https://img.shields.io/badge/Version--Control-GitHub-181717?logo=github&style=for-the-badge)
+![Vercel](https://img.shields.io/badge/Deployment-Vercel-000000?logo=vercel&style=for-the-badge)
+
+</div>
 
 ---
 
