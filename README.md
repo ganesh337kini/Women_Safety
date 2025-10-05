@@ -70,6 +70,52 @@ Users can define safe zones, manage trusted guardians, send emergency SOS alerts
 
 ---
 
+## 🏗️ System Architecture
+
+Below is a high-level overview of how the **Women Safety Zowe** platform is structured:
+
+```
+                              +-----------------+
+                              |   Map API /     |
+                              |  Geolocation    |
+                              +--------+--------+
+                                       ^
+                                       |
+                                       |
++----------------------+     HTTPS     |   +--------------------+
+|      Client (UI)     |-------------> |   |    External APIs    |
+|  (React / Next.js)   |               |   |  (Map, SMS, Email)  |
+| - SOS button         |               |   +--------------------+
+| - Safe Zone editor   |
+| - Guardians list     |
++----+---+-------------+
+     |   |
+     |   | WebSocket / HTTP
+     v   v
++----------------------+
+|   Server (Node/Express)|
+| - Auth (JWT)         |
+| - SOS routing        |
+| - Notifications      |
+| - Safe zones logic   |
++---+------------------+
+    |
+    |  CRUD
+    v
++----------------------+
+|     Database         |
+|     (MongoDB)        |
+| - Users & Guardians  |
+| - Safe Zones         |
+| - Alerts / History   |
++----------------------+
+```
+
+
+
+
+---
+
 ## ⚙️ Getting Started
 
 ```bash
