@@ -116,7 +116,7 @@ Below is a high-level overview of how the **Women Safety Zowe** platform is stru
 
 ---
 
-## ⚙️ Getting Started
+## ⚙️ Getting Started 
 
 ```bash
 # 1️⃣ Clone the repository
@@ -134,3 +134,66 @@ npm run dev
 
 # 5️⃣ Open in your browser
 http://localhost:3000
+
+
+## **UML DIAGRAM**
+┌──────────────────────────────────────────┐
+                         │              <<Actor>>                   │
+                         │                 User                     │
+                         │------------------------------------------│
+                         │ - Registers / Logs in                    │
+                         │ - Adds Trusted Contacts                  │
+                         │ - Triggers SOS                           │
+                         │ - Views Tips & News                      │
+                         └──────────────────────────────────────────┘
+                                         │
+                                         │ interacts with
+                                         ▼
+ ┌─────────────────────────────────────────────────────────────────────────────┐
+ │                     <<Subsystem>>  Women Safety App                         │
+ │-----------------------------------------------------------------------------│
+ │   <<Classes / Components>>                                                  │
+ │                                                                             │
+ │  ┌────────────────────┐    ┌───────────────────┐   ┌─────────────────────┐  │
+ │  │  UserManager       │    │ SOSService        │   │ NotificationService │  │
+ │  │--------------------│    │-------------------│   │---------------------│  │
+ │  │ +register()        │    │ +triggerSOS()     │   │ +sendSMS()          │  │
+ │  │ +login()           │    │ +cancelSOS()      │   │ +sendPush()         │  │
+ │  │ +updateProfile()   │    │ +shareLocation()  │   │ +playAlarm()        │  │
+ │  └────────────────────┘    └───────────────────┘   └─────────────────────┘  │
+ │          │                    │                     │                       │
+ │          │ uses                │ uses                │ interacts with        │
+ │          ▼                    ▼                     ▼                       │
+ │  ┌────────────────────┐   ┌───────────────────┐  ┌──────────────────────┐   │
+ │  │EmergencyContactMgr │   │LocationTracker    │  │ContentManager        │   │
+ │  │--------------------│   │-------------------│  │----------------------│   │
+ │  │ +addContact()      │   │ +getCurrentLoc()  │  │ +fetchNews()         │   │
+ │  │ +deleteContact()   │   │ +updateLoc()      │  │ +fetchSafetyTips()   │   │
+ │  └────────────────────┘   └───────────────────┘  └──────────────────────┘   │
+ │                                                                             │
+ │  <<Data Flow>>                                                              │
+ │   User presses power button → SOSService → LocationTracker →                │
+ │   NotificationService → TrustedContacts → Receives SMS & Map link           │
+ │                                                                             │
+ └─────────────────────────────────────────────────────────────────────────────┘
+                                         │
+                                         │ communicates via API/SMS
+                                         ▼
+ ┌─────────────────────────────────────────────────────────────────────────────┐
+ │              <<Subsystem>> Cloud Backend / APIs                             │
+ │-----------------------------------------------------------------------------│
+ │ + REST API (User, SOS, News, Tips)                                          │
+ │ + SMS Gateway (Twilio / MSG91)                                              │
+ │ + Firebase / Firestore DB (User, SOS Events)                                │
+ │ + External APIs (News, Learning Content)                                    │
+ └─────────────────────────────────────────────────────────────────────────────┘
+                                         │
+                                         │ sends notifications to
+                                         ▼
+ ┌─────────────────────────────────────────────────────────────────────────────┐
+ │              <<Actor>> Trusted Contact / Guardian                           │
+ │-----------------------------------------------------------------------------│
+ │  - Receives SOS Alert (SMS/Push)                                            │
+ │  - Opens Map Link to Track User Location                                    │
+ │  - Contacts User or Authorities if Needed                                   │
+ └─────────────────────────────────────────────────────────────────────────────┘
