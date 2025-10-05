@@ -17,6 +17,7 @@ import TravelComp from "./pages/TravelComp";
 import Profile from "./pages/Profile";
 import SpeedList from "./pages/SpeedList";
 import Create from "./pages/Create";
+import FooterAbout from "./components/FooterAbout";
 
 import Tutorial from "./pages/Tutorial";
 
@@ -42,6 +43,7 @@ function App() {
         <Route path="/create" element={<PostBlog />} />
         <Route path="/login" element={<Login />} />
         <Route path="/tutorials" element={<Tutorial />} />
+        <Route path="/about" element={<FooterAbout />} />
 
         <Route
           path="*"
@@ -56,6 +58,7 @@ function App() {
       {/* SOS full page (no layout) */}
       <Route path="/sos" element={<SOS />} />
       <Route path="/travel" element={<TravelComp />} />
+      
     </Routes>
   );
 }
