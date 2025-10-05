@@ -111,32 +111,8 @@ Below is a high-level overview of how the **Women Safety Zowe** platform is stru
 +----------------------+
 ```
 
-
-
-
----
-
-## ⚙️ Getting Started 
-
-```bash
-# 1️⃣ Clone the repository
-git clone https://github.com/ganesh337kini/Women_Safety.git
-cd Women_Safety
-
-# 2️⃣ Install dependencies
-npm install
-
-# 3️⃣ Configure environment variables
-# (MAP_API_KEY, DATABASE_URL, JWT_SECRET, EMAIL_SERVICE, etc.)
-
-# 4️⃣ Run in development mode
-npm run dev
-
-# 5️⃣ Open in your browser
-http://localhost:3000
-
-
-## **UML DIAGRAM**
+UML DIAGRAM
+```
 ┌──────────────────────────────────────────┐
                          │              <<Actor>>                   │
                          │                 User                     │
@@ -197,3 +173,26 @@ http://localhost:3000
  │  - Opens Map Link to Track User Location                                    │
  │  - Contacts User or Authorities if Needed                                   │
  └─────────────────────────────────────────────────────────────────────────────┘
+
+```
+
+---
+
+## ⚙️ Getting Started 
+
+```bash
+# 1️⃣ Clone the repository
+git clone https://github.com/ganesh337kini/Women_Safety.git
+cd Women_Safety
+
+# 2️⃣ Install dependencies
+npm install
+
+# 3️⃣ Configure environment variables
+# (MAP_API_KEY, DATABASE_URL, JWT_SECRET, EMAIL_SERVICE, etc.)
+
+# 4️⃣ Run in development mode
+npm run dev
+
+# 5️⃣ Open in your browser
+http://localhost:3000
