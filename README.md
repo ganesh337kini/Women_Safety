@@ -1,15 +1,15 @@
 <!-- PROJECT HEADER -->
 <div align="center">
 
-# 💖 Women Safety & Awareness Platform  
+# 💖 Women Safety Zowe  
 
-### _Empowering Women through Technology, Awareness, and Action._
+### _Enhancing Women’s Safety through Technology, Awareness, and Real-Time Action._
 
 [![Website](https://img.shields.io/website?url=https%3A%2F%2Fwomen-safety-zowe.vercel.app&style=flat-square&color=brightgreen)](https://women-safety-zowe.vercel.app)
 ![Status](https://img.shields.io/badge/Status-Active-success?style=flat-square)
 
 <p align="center">
-  <b>A complete safety and empowerment ecosystem for women — combining education, awareness, and real-time assistance.</b>
+  <b>A web application aimed at enhancing women’s safety by providing SOS alerts, safe zones, guardian contacts, and real-time location sharing.</b>
 </p>
 
 🔗 **Live Website:** [https://women-safety-zowe.vercel.app](https://women-safety-zowe.vercel.app)
@@ -18,36 +18,33 @@
 
 ---
 
-## 🪷 About the Project
+## 🌸 About the Project
 
-The **Women Safety & Awareness Platform** is an initiative to promote **security, awareness, and empowerment** among women.  
-It enables users to create a **personal SOS profile**, share their **live location**, access **emergency helplines**, and explore **safety resources** from verified organizations.
+**Women Safety Zowe** is a modern and intuitive web platform designed to ensure women’s safety by combining real-time location tracking, alert systems, and safety awareness.  
+Users can define safe zones, manage trusted guardians, send emergency SOS alerts, and receive live safety updates.
 
-💡 _Our mission is to blend technology with compassion and real-world safety._
-
----
-
-## 🌟 Features Overview
-
-| Category | Description |
-|-----------|--------------|
-| 🚨 **SOS Profile Management** | Register your phone, add up to 5 relatives, and share live location. |
-| 🗺️ **Live Map Integration** | Real-time map visualization using Leaflet and OpenStreetMap. |
-| 📞 **Emergency Speed Dial** | Quick access to verified helplines (Police, Ambulance, Women’s). |
-| 📰 **Awareness Blogs** | Curated educational and safety-focused articles. |
-| 💪 **Safety Organizations** | Connect with NGOs and verified women-support networks. |
-| ⚙️ **Editable Profile Dashboard** | Update user data and emergency contacts easily. |
-| 💫 **Modern UI/UX** | Built with Tailwind CSS, Bootstrap, and Framer Motion for responsive design and smooth animations. |
+💡 _Our mission: Empower women through smart, secure, and compassionate technology._
 
 ---
 
-## 🧠 Tech Stack
+## 🌟 Features
+
+| Feature | Description |
+|----------|--------------|
+| 🏠 **Welcome / Home Page** | Introduction and navigation to all key safety modules. |
+| 🛡️ **Safe Zone** | Allows users to define safe geographical areas. |
+| 👨‍👩‍👧 **Guardians** | Add and manage trusted emergency contacts. |
+| 🚨 **Safety Alarm / SOS** | Sends an SOS alert with your live GPS location. |
+| 📰 **Latest News / Safety Tips** | Displays real-time safety updates and advice. |
+
+---
+
+## 🧠 Tech Stack (with Explanation)
 
 <div align="center">
 
 ![React](https://img.shields.io/badge/Frontend-React-61DAFB?logo=react&style=for-the-badge)
 ![TailwindCSS](https://img.shields.io/badge/UI-TailwindCSS-38B2AC?logo=tailwindcss&style=for-the-badge)
-![Bootstrap](https://img.shields.io/badge/UI-Bootstrap-7952B3?logo=bootstrap&style=for-the-badge)
 ![Node.js](https://img.shields.io/badge/Backend-Node.js-68A063?logo=node.js&style=for-the-badge)
 ![Express](https://img.shields.io/badge/API-Express-000000?logo=express&style=for-the-badge)
 ![MongoDB](https://img.shields.io/badge/Database-MongoDB-4EA94B?logo=mongodb&style=for-the-badge)
@@ -59,21 +56,35 @@ It enables users to create a **personal SOS profile**, share their **live locati
 
 </div>
 
+| Layer | Technologies | Usage Explanation |
+|-------|---------------|-------------------|
+| **Frontend** | **React.js** | Builds the dynamic, responsive single-page interface for users to interact with the app. |
+| **UI / Styling** | **Tailwind CSS** | Provides clean, modern design with responsive utility classes. |
+| **Backend** | **Node.js + Express.js** | Handles APIs, user authentication, and SOS alert routing. |
+| **Database** | **MongoDB** | Stores user data, guardian contacts, safe zones, and alert history. |
+| **Authentication** | **JWT (JSON Web Tokens)** | Secures user sessions and verifies authentication tokens. |
+| **Mapping** | **Leaflet + OpenStreetMap** | Displays real-time user location and safe zone boundaries. |
+| **Animations** | **Framer Motion** | Adds smooth transitions and engaging UI animations. |
+| **Version Control** | **Git + GitHub** | Manages source code and enables collaborative development. |
+| **Deployment** | **Vercel** | Hosts the frontend and backend for fast, global accessibility. |
+
 ---
 
-## ⚙️ Quick Start
+## ⚙️ Getting Started
 
 ```bash
-# 1️⃣ Clone Repository
+# 1️⃣ Clone the repository
 git clone https://github.com/ganesh337kini/Women_Safety.git
 cd Women_Safety
 
-# 2️⃣ Install Backend
-cd server
+# 2️⃣ Install dependencies
 npm install
-npm start   # runs at http://localhost:5000
 
-# 3️⃣ Install Frontend
-cd ../client
-npm install
-npm start   # runs at http://localhost:3000
+# 3️⃣ Configure environment variables
+# (MAP_API_KEY, DATABASE_URL, JWT_SECRET, EMAIL_SERVICE, etc.)
+
+# 4️⃣ Run in development mode
+npm run dev
+
+# 5️⃣ Open in your browser
+http://localhost:3000
